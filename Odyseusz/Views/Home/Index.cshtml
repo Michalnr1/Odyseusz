@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<body>
+    <h1>Zgłoszenie podróży zagranicznej</h1>
+    <form id="travel-form">
+        <fieldset>
+            <legend>Dane osobowe</legend>
+            <label>Imię <input type="text" name="first_name" required></label>
+            <label>Nazwisko <input type="text" name="last_name" required></label>
+            <label>PESEL <input type="text" name="pesel" pattern="\d{11}" required></label>
+            <label>Nr telefonu <input type="tel" name="phone" pattern="\+\d+" required></label>
+            <label>Email <input type="email" name="email" required></label>
+            <label>
+                Kraj
+                <select name="country" required>
+                    <option value="">Ładowanie krajów...</option>
+                </select>
+            </label>
+            <label>Miejscowość <input type="text" name="city" required></label>
+            <label>Ulica <input type="text" name="street" required></label>
+            <label>Nr domu <input type="number" name="house_number" required></label>
+            <label>Nr lokalu <input type="number" name="apartment_number"></label>
+        </fieldset>
+
+        <div id="travel-stages">
+            <fieldset class="travel-stage">
+                <legend>Etap podróży 1</legend>
+                <label>Data przyjazdu <input type="date" name="arrival_date_1" required></label>
+                <label>Data wyjazdu <input type="date" name="departure_date_1" required></label>
+                <label>
+                    Kraj
+                    <select name="country_1" required>
+                        <option value="">Ładowanie krajów...</option>
+                    </select>
+                </label>
+                <label>
+                    Organizator pobytu
+                    <select name="organizer_1" required>
+                        <option value="">Wybierz</option>
+                        <option value="Hotel">Hotel</option>
+                        <option value="Firma">Firma</option>
+                        <option value="Prywatnie">Prywatnie</option>
+                    </select>
+                </label>
+                <label>Miejscowość <input type="text" name="city_1" required></label>
+                <label>Ulica <input type="text" name="street_1" required></label>
+                <label>Nr domu <input type="number" name="house_number_1" required></label>
+                <label>Nr lokalu <input type="number" name="apartment_number_1"></label>
+                <button type="button" class="remove-stage" onclick="removeTravelStage(this)">- Usuń etap</button>
+            </fieldset>
+        </div>
+
+        <button type="button" id="add-stage">+ Dodaj etap podróży</button>
+        <div class="buttons">
+            <button type="submit">Zatwierdź</button>
+            <button type="reset">Anuluj</button>
+        </div>
+    </form>
+
+    <div id="summary-view" class="hidden">
+        <h2>Podsumowanie zgłoszenia</h2>
+        <div id="summary-content"></div>
+        <button id="confirm-submit">Zatwierdź zgłoszenie</button>
+        <button id="modify-form">Modyfikuj zgłoszenie</button>
+    </div>
+
+
+    <script src="scripts.js"></script>
+</body>

@@ -1,0 +1,19 @@
+<warnings>
+  <warning>
+    <country>Polska</country>
+    <message>Unikaj dużych zgromadzeń.</message>
+  </warning>
+  <warning>
+    <country>Francja</country>
+    <message>Zwiększona liczba kieszonkowców w dużych miastach.</message>
+  </warning>
+  <warning>
+    <country>Włochy</country>
+    <message>Uwaga na strajki transportowe.</message>
+  </warning>
+  <warning>
+    <country name="Sudan">
+        <url>https://www.gov.pl/web/egipt/sudan-idp</url>
+    </country>
+  </warning>
+</warnings>
