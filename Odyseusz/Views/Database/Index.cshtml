@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Database Management";
+    Layout = ViewData["Layout"] as string ?? "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Baza danych systemu Odyseusz</h2>
+
+<div class="d-flex flex-wrap gap-3 mt-3">
+    <a href="@Url.Action("Index", "Kraj")" class="btn btn-primary">
+        Kraje
+    </a>
+    <a href="@Url.Action("Index", "Adres")" class="btn btn-primary">
+        Adresy
+    </a>
+    <a href="@Url.Action("Index", "DaneOsobowe")" class="btn btn-primary">
+        Dane Osobowe
+    </a>
+    <a href="@Url.Action("Index", "EtapPodrozy")" class="btn btn-primary">
+        Etapy Podróży
+    </a>
+    <a href="@Url.Action("Index", "ZgloszeniePodrozy")" class="btn btn-primary">
+        Zgłoszenia Podróży
+    </a>
+</div>
+<div class="d-flex flex-wrap gap-3 mt-3">
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary" style="background-color:#eb4034">
+        Wyjdź
+    </a>
+</div>
