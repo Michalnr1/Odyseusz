@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Odyseusz.domain.ZgloszeniePodrozy>
+
+<h2>Zgłoszenia Podróży</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Data Zgłoszenia</th>
+            <th>Imię i Nazwisko</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var zgloszenie in Model)
+        {
+            <tr>
+                <td>@zgloszenie.Id</td>
+                <td>@zgloszenie.DataZgloszenia.ToShortDateString()</td>
+                <td>@zgloszenie.DaneOsobowe.Imie @zgloszenie.DaneOsobowe.Nazwisko</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Odyseusz.domain.Kraj>
+
+<h2>Kraje</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Kod</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kraj in Model)
+        {
+            <tr>
+                <td>@kraj.Nazwa</td>
+                <td>@kraj.KodKraju</td>
+            </tr>
+        }
+    </tbody>
+</table>
