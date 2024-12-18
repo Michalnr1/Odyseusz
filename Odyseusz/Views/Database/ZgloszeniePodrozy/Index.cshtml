@@ -1,13 +1,20 @@
 ﻿@model IEnumerable<Odyseusz.domain.ZgloszeniePodrozy>
 
-<h2>Zgłoszenia Podróży</h2>
+@{
+    Layout = ViewData["Layout"] as string ?? "~/Views/Shared/_DatabaseLayout.cshtml";
+}
+
+<h2>Zgłoszenia podróży</h2>
 
 <table class="table">
     <thead>
         <tr>
             <th>Id</th>
-            <th>Data Zgłoszenia</th>
-            <th>Imię i Nazwisko</th>
+            <th>Data zgłoszenia</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>PESEL</th>
+            <th>Liczba etapów podroży</th>
         </tr>
     </thead>
     <tbody>
@@ -16,7 +23,10 @@
             <tr>
                 <td>@zgloszenie.Id</td>
                 <td>@zgloszenie.DataZgloszenia.ToShortDateString()</td>
-                <td>@zgloszenie.DaneOsobowe.Imie @zgloszenie.DaneOsobowe.Nazwisko</td>
+                <td>@zgloszenie.DaneOsobowe.Imie</td>
+                <td>@zgloszenie.DaneOsobowe.Nazwisko</td>
+                <td>@zgloszenie.DaneOsobowe.Pesel</td>
+                <td>@zgloszenie.EtapyPodrozy.Count()</td>
             </tr>
         }
     </tbody>

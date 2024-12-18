@@ -2,7 +2,7 @@
 {
     public enum OrganizatorPobytu
     {
-        BiorpPodrozy,
+        BiuroPodrozy,
         Firma,
         Prywatnie
     }

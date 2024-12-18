@@ -43,6 +43,32 @@ namespace Odyseusz.dal
                 })
                 .ToList();
             modelBuilder.Entity<Kraj>().HasData(kraje);
+
+            //modelBuilder.Entity<Kraj>().HasQueryFilter(k => false);
         }
+        public override int SaveChanges()
+        {
+            foreach (var entry in ChangeTracker.Entries<Kraj>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.State = EntityState.Unchanged; // Blokowanie dodawania nowych krajów
+                }
+            }
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries<Kraj>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.State = EntityState.Unchanged; // Blokowanie dodawania nowych krajów
+                }
+            }
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
     }
 }

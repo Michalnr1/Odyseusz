@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<Odyseusz.domain.Kraj>
 
+@{
+    Layout = ViewData["Layout"] as string ?? "~/Views/Shared/_DatabaseLayout.cshtml";
+}
+
 <h2>Kraje</h2>
 
 <table class="table">

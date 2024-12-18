@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Odyseusz.domain.Adres>
+
+@{
+    Layout = ViewData["Layout"] as string ?? "~/Views/Shared/_DatabaseLayout.cshtml";
+}
+
+<h2>Adresy</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Miejscowość</th>
+            <th>Ulica</th>
+            <th>Nr domu</th>
+            <th>Nr lokalu</th>
+            <th>Kraj</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var adres in Model)
+        {
+            <tr>
+                <td>@adres.Id</td>
+                <td>@adres.Miejscowosc</td>
+                <td>@adres.Ulica</td>
+                <td>@adres.NrDomu</td>
+                <td>@($"{(adres.NrLokalu ?? string.Empty)}")</td>
+                <td>@adres.NazwaKraju</td>
+            </tr>
+        }
+    </tbody>
+</table>

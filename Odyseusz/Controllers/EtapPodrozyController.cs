@@ -15,8 +15,11 @@ namespace Odyseusz.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var etapyPodrozy = await _service.GetAllAsync();
-            return View(etapyPodrozy); // Widok: Views/EtapPodrozy/Index.cshtml
+            //var etapyPodrozy = await _service.GetAllAsync();
+            var etapyPodrozy = await _service.GetAllIncludingAsync(
+                e => e.Adres
+            );
+            return View("~/Views/Database/EtapPodrozy/Index.cshtml", etapyPodrozy); // Widok: Views/Database/EtapPodrozy/Index.cshtml
         }
 
         public async Task<IActionResult> Details(int id)

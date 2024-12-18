@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,16 @@ namespace Odyseusz.dal.Repositories.Implementations
         }
 
         public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
+
+        public async Task<IEnumerable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _dbSet;
+            foreach (var includeProperty in includeProperties)
+            { 
+               query = query.Include(includeProperty);
+            }
+            return await query.ToListAsync();
+        }
 
         public async Task<T?> GetByIdAsync(TKey id) => await _dbSet.FindAsync(id);
 

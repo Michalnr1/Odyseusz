@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,11 @@ namespace Odyseusz.bll.Services.Implementations
         }
 
         public Task<IEnumerable<T>> GetAllAsync() => _repository.GetAllAsync();
+
+        public async Task<IEnumerable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties)
+        {
+            return await _repository.GetAllIncludingAsync(includeProperties);
+        }
 
         public Task<T?> GetByIdAsync(TKey id) => _repository.GetByIdAsync(id);
 

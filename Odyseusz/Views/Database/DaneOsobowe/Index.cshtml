@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Odyseusz.domain.DaneOsobowe>
+
+@{
+    Layout = ViewData["Layout"] as string ?? "~/Views/Shared/_DatabaseLayout.cshtml";
+}
+
+<h2>Dane osobowe</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>PESEL</th>
+            <th>Nr telefonu</th>
+            <th>Email</th>
+            <th>Adres</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var daneOsobowe in Model)
+        {
+            <tr>
+                <td>@daneOsobowe.Id</td>
+                <td>@daneOsobowe.Imie</td>
+                <td>@daneOsobowe.Nazwisko</td>
+                <td>@daneOsobowe.Pesel</td>
+                <td>@daneOsobowe.NrTelefonu</td>
+                <td>@daneOsobowe.Email</td>
+                <td>@($"{daneOsobowe.Adres.NazwaKraju}, {daneOsobowe.Adres.Miejscowosc}, ul. {daneOsobowe.Adres.Ulica} {daneOsobowe.Adres.NrDomu} {(daneOsobowe.Adres.NrLokalu ?? string.Empty)}")</td>
+            </tr>
+        }
+    </tbody>
+</table>

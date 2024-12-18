@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Odyseusz.bll.Services.Interfaces;
 using Odyseusz.domain;
 
 namespace Odyseusz.Controllers
 {
-    [Route("Database/[controller]")]
+    //[Route("Database/[controller]")]
     public class KrajController : Controller
     {
         private readonly IGenericService<Kraj, string> _service;
@@ -28,13 +30,23 @@ namespace Odyseusz.Controllers
             if (kraj == null)
                 return NotFound();
 
-            return View("~/Views/Database/Kraj/Index.cshtml", kraj); // Widok: Views/Database/Kraj/Details.cshtml
+            return View(kraj); // Widok: Views/Database/Kraj/Details.cshtml
         }
-
+        /*
         [HttpGet("Create")]
         public IActionResult Create()
         {
             return View(); // Widok: Views/Kraj/Create.cshtml
+        }*/
+
+        [HttpGet("Create")]
+        public async Task<IActionResult> Create()
+        {
+            var kraje = await _service.GetAllAsync();
+
+            TempData["TempCountries"] = JsonSerializer.Serialize(kraje);
+
+            return RedirectToAction("Create", "ZgloszeniePodrozy");
         }
 
         [HttpPost("Create")]

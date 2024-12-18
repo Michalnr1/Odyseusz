@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Odyseusz.domain.EtapPodrozy>
+
+@{
+    Layout = ViewData["Layout"] as string ?? "~/Views/Shared/_DatabaseLayout.cshtml";
+}
+
+<h2>Etapy podróży</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Data przyjazdu</th>
+            <th>Data wyjazdu</th>
+            <th>Organizator pobytu</th>
+            <th>Adres</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var etap in Model)
+        {
+            <tr>
+                <td>@etap.Id</td>
+                <td>@etap.DataPrzyjazdu.ToShortDateString()</td>
+                <td>@etap.DataWyjazdu.ToShortDateString()</td>
+                <td>@etap.OrganizatorPobytu</td>
+                <td>@($"{etap.Adres.NazwaKraju}, {etap.Adres.Miejscowosc}, ul. {etap.Adres.Ulica} {etap.Adres.NrDomu} {(etap.Adres.NrLokalu ?? string.Empty)}")</td>
+            </tr>
+        }
+    </tbody>
+</table>

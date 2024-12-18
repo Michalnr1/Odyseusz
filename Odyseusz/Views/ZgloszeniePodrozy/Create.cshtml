@@ -1,0 +1,298 @@
+﻿@model Odyseusz.domain.ZgloszeniePodrozy
+
+@{
+    ViewData["Title"] = "Dodaj Zgłoszenie Podróży";
+    var kraje = ViewData["Countries"] as IEnumerable<SelectListItem>;
+    var organizatorzy = ViewData["OrganizatorPobytuList"] as IEnumerable<SelectListItem>;
+}
+
+<h1>Zgłoszenie Podróży</h1>
+
+<form asp-action="Create" method="post" id="travel-form">
+    <fieldset>
+        <legend>Dane Osobowe</legend>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Imie)
+            @Html.EditorFor(model => model.DaneOsobowe.Imie, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Imie, null, new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Nazwisko)
+            @Html.EditorFor(model => model.DaneOsobowe.Nazwisko, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Nazwisko, null, new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Pesel)
+            @Html.EditorFor(model => model.DaneOsobowe.Pesel, new { htmlAttributes = new { @class = "form-control", type = "text", name = "pesel", pattern = @"\d{11}", required = "required" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Pesel, null, new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.NrTelefonu)
+            @Html.EditorFor(model => model.DaneOsobowe.NrTelefonu, new { htmlAttributes = new { @class = "form-control", type = "tel", name = "phone", required = "required" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.NrTelefonu, null, new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Email)
+            @Html.EditorFor(model => model.DaneOsobowe.Email, new { htmlAttributes = new { @class = "form-control", type = "email", name = "email", required = "required" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Email, null, new { @class = "text-danger" })
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Adres Zamieszkania</legend>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Adres.Miejscowosc)
+            @Html.EditorFor(model => model.DaneOsobowe.Adres.Miejscowosc, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Adres.Miejscowosc, null, new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Adres.Ulica)
+            @Html.EditorFor(model => model.DaneOsobowe.Adres.Ulica, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Adres.Ulica, null, new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Adres.NrDomu)
+            @Html.EditorFor(model => model.DaneOsobowe.Adres.NrDomu, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Adres.NrDomu, null, new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Adres.NrLokalu)
+            @Html.EditorFor(model => model.DaneOsobowe.Adres.NrLokalu, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Adres.NrLokalu, null, new { @class = "text-danger" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.DaneOsobowe.Adres.NazwaKraju)
+            @Html.DropDownListFor(
+                     model => model.DaneOsobowe.Adres.NazwaKraju, kraje, "Wybierz kraj",
+                     new { @class = "form-control", required = "required", id = "NazwaKrajuDropdown" })
+            @Html.ValidationMessageFor(model => model.DaneOsobowe.Adres.NazwaKraju, null, new { @class = "text-danger" })
+
+            <!-- Ukryte pole dla KodKraju -->
+            @Html.HiddenFor(model => model.DaneOsobowe.Adres.Kraj.KodKraju, new { id = "KodKrajuHidden" })
+
+            <!-- Ukryte pole dla Nazwa -->
+            @Html.HiddenFor(model => model.DaneOsobowe.Adres.Kraj.Nazwa, new { id = "NazwaKrajuHidden" })
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Etapy Podróży</legend>
+        <div id="travel-stages">
+            <div class="travel-stage" data-index="0">
+                <fieldset>
+                    <legend>Etap podróży 1</legend>
+                    <div>
+                        <label for="EtapyPodrozy_0__DataPrzyjazdu">Data Przyjazdu</label>
+                        <input class="form-control" type="date" id="EtapyPodrozy_0__DataPrzyjazdu" name="EtapyPodrozy[0].DataPrzyjazdu" required />
+                    </div>
+                    <div>
+                        <label for="EtapyPodrozy_0__DataWyjazdu">Data Wyjazdu</label>
+                        <input class="form-control" type="date" id="EtapyPodrozy_0__DataWyjazdu" name="EtapyPodrozy[0].DataWyjazdu" required />
+                    </div>
+                    <div>
+                        <label for="EtapyPodrozy_0__Adres_NazwaKraju">Kraj</label>
+                        @Html.DropDownListFor(
+                                 model => model.EtapyPodrozy[0].Adres.NazwaKraju,
+                                 (IEnumerable<SelectListItem>)ViewData["Countries"],
+                                 "Wybierz kraj",
+                                 new { @class = "form-control", required = "required" }
+                                 )
+                        <!-- Ukryte pole dla KodKraju -->
+                        @Html.HiddenFor(model => model.EtapyPodrozy[0].Adres.Kraj.KodKraju, new { id = "EtapyPodrozy_0__Adres_Kraj_KodKraju" })
+
+                        <!-- Ukryte pole dla Nazwa -->
+                        @Html.HiddenFor(model => model.EtapyPodrozy[0].Adres.Kraj.Nazwa, new { id = "EtapyPodrozy_0__Adres_Kraj_Nazwa" })
+                    </div>
+                    <div>
+                        <label for="EtapyPodrozy_0__Adres_Miejscowosc">Miejscowość</label>
+                        <input class="form-control" type="text" id="EtapyPodrozy_0__Adres_Miejscowosc" name="EtapyPodrozy[0].Adres.Miejscowosc" maxlength="100" required />
+                    </div>
+                    <div>
+                        <label for="EtapyPodrozy_0__Adres_Ulica">Ulica</label>
+                        <input class="form-control" type="text" id="EtapyPodrozy_0__Adres_Ulica" name="EtapyPodrozy[0].Adres.Ulica" maxlength="100" required />
+                    </div>
+                    <div>
+                        <label for="EtapyPodrozy_0__Adres_NrDomu">Numer domu</label>
+                        <input class="form-control" type="text" id="EtapyPodrozy_0__Adres_NrDomu" name="EtapyPodrozy[0].Adres.NrDomu" maxlength="20" required />
+                    </div>
+                    <div>
+                        <label for="EtapyPodrozy_0__Adres_NrLokalu">Numer lokalu</label>
+                        <input class="form-control" type="text" id="EtapyPodrozy_0__Adres_NrLokalu" name="EtapyPodrozy[0].Adres.NrLokalu" maxlength="20" />
+                    </div>
+                    <div>
+                        <label for="EtapyPodrozy_0__OrganizatorPobytu">Organizator Pobytu</label>
+                        @Html.DropDownListFor(
+                                 model => model.EtapyPodrozy[0].OrganizatorPobytu,
+                                 (IEnumerable<SelectListItem>)ViewData["OrganizatorPobytuList"],
+                                 "Wybierz opcję",
+                                 new { @class = "form-control", required = "required" }
+                                 )
+                    </div>
+                    <button type="button" class="btn btn-danger remove-stage">Usuń etap</button>
+                </fieldset>
+            </div>
+        </div>
+        <button type="button" class="btn btn-success" id="add-stage">Dodaj etap</button>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Zatwierdź</button>
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        // Funkcja generująca nowy etap podróży
+        function createTravelStage(index, kraje, organizatorzy) {
+            return `
+                <div class="travel-stage" data-index="${index}">
+                    <fieldset>
+                        <legend>Etap podróży ${index + 1}</legend>
+                        <div>
+                            <label for="EtapyPodrozy_${index}__DataPrzyjazdu">Data Przyjazdu</label>
+                            <input class="form-control" type="date" id="EtapyPodrozy_${index}__DataPrzyjazdu" name="EtapyPodrozy[${index}].DataPrzyjazdu" required />
+                        </div>
+                        <div>
+                            <label for="EtapyPodrozy_${index}__DataWyjazdu">Data Wyjazdu</label>
+                            <input class="form-control" type="date" id="EtapyPodrozy_${index}__DataWyjazdu" name="EtapyPodrozy[${index}].DataWyjazdu" required />
+                        </div>
+                        <div>
+                            <label for="EtapyPodrozy_${index}__Adres_NazwaKraju">Kraj</label>
+                            <select class="form-control" id="EtapyPodrozy_${index}__Adres_NazwaKraju" name="EtapyPodrozy[${index}].Adres.NazwaKraju" required>
+                                <option value="">Wybierz kraj</option>
+                                ${kraje.map(kraj => `<option value="${kraj.value}">${kraj.text}</option>`).join('')}
+                            </select>
+                            <!-- Ukryte pola dla KodKraju i Nazwa -->
+                            <input type="hidden" id="EtapyPodrozy_${index}__Adres_Kraj_KodKraju" name="EtapyPodrozy[${index}].Adres.Kraj.KodKraju" value="" />
+                            <input type="hidden" id="EtapyPodrozy_${index}__Adres_Kraj_Nazwa" name="EtapyPodrozy[${index}].Adres.Kraj.Nazwa" value="" />
+                        </div>
+                        <div>
+                            <label for="EtapyPodrozy_${index}__Adres_Miejscowosc">Miejscowość</label>
+                            <input class="form-control" type="text"
+                                   id="EtapyPodrozy_${index}__Adres_Miejscowosc"
+                                   name="EtapyPodrozy[${index}].Adres.Miejscowosc"
+                                   maxlength="100" required />
+                        </div>
+                        <div>
+                            <label for="EtapyPodrozy_${index}__Adres_Ulica">Ulica</label>
+                            <input class="form-control" type="text"
+                                   id="EtapyPodrozy_${index}__Adres_Ulica"
+                                   name="EtapyPodrozy[${index}].Adres.Ulica"
+                                   maxlength="100" required />
+                        </div>
+                        <div>
+                            <label for="EtapyPodrozy_${index}__Adres_NrDomu">Numer domu</label>
+                            <input class="form-control" type="text"
+                                   id="EtapyPodrozy_${index}__Adres_NrDomu"
+                                   name="EtapyPodrozy[${index}].Adres.NrDomu"
+                                   maxlength="20" required />
+                        </div>
+                        <div>
+                            <label for="EtapyPodrozy_${index}__Adres_NrLokalu">Numer lokalu</label>
+                            <input class="form-control" type="text"
+                                   id="EtapyPodrozy_${index}__Adres_NrLokalu"
+                                   name="EtapyPodrozy[${index}].Adres.NrLokalu"
+                                   maxlength="20" />
+                        </div>
+                        <div>
+                            <label for="EtapyPodrozy_${index}__OrganizatorPobytu">Organizator Pobytu</label>
+                            <select class="form-control" id="EtapyPodrozy_${index}__OrganizatorPobytu" name="EtapyPodrozy[${index}].OrganizatorPobytu" required>
+                                <option value="">Wybierz opcję</option>
+                                ${organizatorzy.map(org => `<option value="${org.value}">${org.text}</option>`).join('')}
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-danger remove-stage">Usuń etap</button>
+                    </fieldset>
+                </div>`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const travelStagesContainer = document.getElementById('travel-stages');
+            const addStageButton = document.getElementById('add-stage');
+            const krajeData = @Html.Raw(ViewData["CountriesData"]);
+
+            // Pobierz dane krajów i organizatorów z ViewData przekazanego do widoku
+            const kraje = @Html.Raw(Json.Serialize(ViewData["Countries"] as List<SelectListItem>));
+            const organizatorzy = @Html.Raw(Json.Serialize(ViewData["OrganizatorPobytuList"] as List<SelectListItem>));
+
+            // Dodawanie nowego etapu podróży
+            addStageButton.addEventListener('click', () => {
+                const index = travelStagesContainer.children.length;
+                const newStageHtml = createTravelStage(index, kraje, organizatorzy);
+                travelStagesContainer.insertAdjacentHTML('beforeend', newStageHtml);
+            });
+
+            // Usuwanie etapu podróży
+            travelStagesContainer.addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-stage')) {
+                    const stageElement = event.target.closest('.travel-stage');
+                    if (travelStagesContainer.children.length > 1) {
+                        stageElement.remove();
+                        updateStageNumbers();
+                    }
+                }
+            });
+
+            // Aktualizacja numeracji etapów
+            function updateStageNumbers() {
+                const stages = Array.from(travelStagesContainer.children);
+                stages.forEach((stage, index) => {
+                    const legend = stage.querySelector('legend');
+                    legend.textContent = `Etap podróży ${index + 1}`;
+
+                    // Aktualizacja atrybutów pól
+                    stage.dataset.index = index;
+                    stage.querySelectorAll('input, select').forEach((input) => {
+                        const name = input.name.replace(/\d+/g, index);
+                        const id = input.id.replace(/\d+/g, index);
+                        input.name = name;
+                        input.id = id;
+
+                        const label = stage.querySelector(`label[for="${input.id}"]`);
+                        if (label) label.setAttribute('for', id);
+                    });
+                });
+            }
+
+            // Obsługa zmiany w dropdown
+            document.getElementById("travel-stages").addEventListener("change", function (event) {
+                if (event.target.matches('[id^="EtapyPodrozy_"][id$="__Adres_NazwaKraju"]')) {
+                    const dropdown = event.target;
+                    const selectedNazwaKraju = dropdown.value;
+
+                    // Pobierz dane kraju na podstawie KodKraju
+                    const matchingCountry = krajeData.find(kraj => kraj.Nazwa === selectedNazwaKraju);
+
+                    if (matchingCountry) {
+                        // Znajdź indeks etapu
+                        const stageIndex = dropdown.closest(".travel-stage").getAttribute("data-index");
+
+                        // Zaktualizuj ukryte pola
+                        document.getElementById(`EtapyPodrozy_${stageIndex}__Adres_Kraj_KodKraju`).value = matchingCountry.KodKraju;
+                        document.getElementById(`EtapyPodrozy_${stageIndex}__Adres_Kraj_Nazwa`).value = matchingCountry.Nazwa;
+                    }
+                }
+            });
+        });
+
+        // Wstrzyknięcie danych CountriesData jako JSON
+        const krajeData = @Html.Raw(ViewData["CountriesData"]);
+
+        // Obsługa zdarzenia zmiany w dropdown
+        document.getElementById("NazwaKrajuDropdown").addEventListener("change", function () {
+            const selectedNazwaKraju = this.value;
+
+            // Znajdź dane kraju w liście
+            const matchingCountry = krajeData.find(kraj => kraj.Nazwa === selectedNazwaKraju);
+
+            if (matchingCountry) {
+                // Zaktualizuj ukryte pola
+                document.getElementById("KodKrajuHidden").value = matchingCountry.KodKraju;
+                document.getElementById("NazwaKrajuHidden").value = matchingCountry.Nazwa;
+            }
+        });
+
+
+    </script>
+}
+

@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Azure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Odyseusz.bll.Services.Interfaces;
 using Odyseusz.domain;
 
@@ -7,6 +11,7 @@ namespace Odyseusz.Controllers
     public class ZgloszeniePodrozyController : Controller
     {
         private readonly IGenericService<ZgloszeniePodrozy, int> _service;
+        private static List<Kraj> kraje;
 
         public ZgloszeniePodrozyController(IGenericService<ZgloszeniePodrozy, int> service)
         {
@@ -15,8 +20,16 @@ namespace Odyseusz.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var zgloszenia = await _service.GetAllAsync();
-            return View(zgloszenia); // Widok: Views/ZgloszeniePodrozy/Index.cshtml
+            //var zgloszenia = await _service.GetAllAsync();
+            var zgloszenia = await _service.GetAllIncludingAsync(
+                z => z.DaneOsobowe,
+                z => z.DaneOsobowe.Adres,
+                z => z.DaneOsobowe.Adres.Kraj,
+                z => z.EtapyPodrozy
+                //z => z.EtapyPodrozy.Select(e => e.Adres),
+                //z => z.EtapyPodrozy.Select(e => e.Adres.Kraj)
+            );
+            return View("~/Views/Database/ZgloszeniePodrozy/Index.cshtml", zgloszenia); // Widok: Views/Database/ZgloszeniePodrozy/Index.cshtml
         }
 
         public async Task<IActionResult> Details(int id)
@@ -30,6 +43,38 @@ namespace Odyseusz.Controllers
 
         public IActionResult Create()
         {
+            ViewData["OrganizatorPobytuList"] = Enum.GetValues(typeof(OrganizatorPobytu))
+            .Cast<OrganizatorPobytu>()
+            .Select(e => new SelectListItem
+            {
+                Value = e.ToString(),
+                Text = e.ToString()
+            })
+            .ToList();
+            
+            var krajeJson = TempData["TempCountries"] as string;
+
+            if (string.IsNullOrEmpty(krajeJson))
+            {
+                return RedirectToAction("Create", "Kraj");
+            }
+
+            kraje = JsonSerializer.Deserialize<List<Kraj>>(krajeJson);
+            
+            //var kraje = await _serviceKraj.GetAllAsync();
+
+            ViewData["Countries"] = kraje.Select(k => new SelectListItem
+            {
+                Value = k.Nazwa,
+                Text = k.Nazwa  
+            }).ToList();
+
+            // Serializacja do JSON i przekazanie jako ViewData
+            ViewData["CountriesData"] = JsonSerializer.Serialize(
+                kraje.Select(k => new { k.KodKraju, k.Nazwa })
+            );
+
+
             return View(); // Widok: Views/ZgloszeniePodrozy/Create.cshtml
         }
 
@@ -37,6 +82,26 @@ namespace Odyseusz.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ZgloszeniePodrozy zgloszenie)
         {
+            var kraj = kraje.FirstOrDefault(k => k.Nazwa == zgloszenie.DaneOsobowe.Adres.Kraj.Nazwa);
+            zgloszenie.DaneOsobowe.Adres.Kraj = kraj;
+
+            // Upewnij się, że każdy etap podróży korzysta z istniejącego kraju
+            foreach (var etap in zgloszenie.EtapyPodrozy)
+            {
+                kraj = kraje.FirstOrDefault(k => k.Nazwa == etap.Adres.Kraj.Nazwa);
+
+                if (kraj != null)
+                {
+                    etap.Adres.Kraj = kraj; // Przypisz istniejący rekord
+                }
+                else
+                {
+                    // Obsługa przypadku, gdy kraj nie został znaleziony (opcjonalnie)
+                    ModelState.AddModelError("", $"Kraj {etap.Adres.Kraj.Nazwa} nie istnieje w bazie.");
+                    return View(zgloszenie);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 await _service.AddAsync(zgloszenie);
