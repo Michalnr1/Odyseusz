@@ -18,6 +18,7 @@ namespace Odyseusz.dal
         public DbSet<EtapPodrozy> EtapyPodrozy { get; set; }
         public DbSet<Kraj> Kraje { get; set; }
         public DbSet<ZgloszeniePodrozy> ZgloszeniaPodrozy { get; set; }
+        public DbSet<Ostrzezenie> Ostrzezenia { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

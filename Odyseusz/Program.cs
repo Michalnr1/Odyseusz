@@ -1,3 +1,4 @@
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Odyseusz.bll;
 using Odyseusz.bll.Services.Implementations;
@@ -21,6 +22,13 @@ builder.Services.AddDbContext<OdyseuszDbContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 builder.Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
 builder.Services.AddScoped<DatabaseLayoutFilter>();
+builder.Services.AddScoped<IWarningRepository, WarningRepository>();
+builder.Services.AddScoped<WarningService>();
+
+// Dodanie Hangfire i konfiguracja z SQL Server
+builder.Services.AddHangfire(config =>
+    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
 
 
 var app = builder.Build();
@@ -43,5 +51,22 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// U¿ycie dashboard Hangfire (opcjonalne)
+app.UseHangfireDashboard();
+
+// Przyk³adowa konfiguracja zadania cyklicznego
+var serviceProvider = app.Services.CreateScope().ServiceProvider;
+var warningService = serviceProvider.GetRequiredService<WarningService>();
+string warningsFilePath = "..\\Odyseusz.dal\\warnings.xml";
+BackgroundJob.Enqueue(() => warningService.UpdateWarningsFromXml(warningsFilePath));
+
+// Mo¿na równie¿ dodaæ zadanie cykliczne, np. codziennie
+RecurringJob.AddOrUpdate(
+    "UpdateWarnings",
+    () => warningService.UpdateWarningsFromXml(warningsFilePath),
+    Cron.Daily);
+    //Cron.MinuteInterval(5));
+    //"*/1 * * * *");
 
 app.Run();

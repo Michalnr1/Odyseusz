@@ -32,6 +32,16 @@ namespace Odyseusz.Controllers
 
             return View(kraj); // Widok: Views/Database/Kraj/Details.cshtml
         }
+
+        public async Task<IActionResult> getCountriesForReport()
+        {
+            var kraje = await _service.GetAllAsync();
+
+            TempData["TempCountries"] = JsonSerializer.Serialize(kraje);
+
+            return RedirectToAction("Create", "Raport");
+        }
+
         /*
         [HttpGet("Create")]
         public IActionResult Create()

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Odyseusz.dal;
 
@@ -11,9 +12,11 @@ using Odyseusz.dal;
 namespace Odyseusz.dal.Migrations
 {
     [DbContext(typeof(OdyseuszDbContext))]
-    partial class OdyseuszDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250114124614_AddWarnings")]
+    partial class AddWarnings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

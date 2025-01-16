@@ -1,0 +1,38 @@
+﻿@model Odyseusz.Models.ReportViewModel
+
+@{
+    ViewData["Title"] = "Raport ze zgłoszeń podróży w dniach " +
+                        Model.StartDate.ToString("yyyy-MM-dd") + " - " +
+                        Model.EndDate.ToString("yyyy-MM-dd");
+}
+
+<h2>@ViewData["Title"]</h2>
+<p><strong>Data wygenerowania raportu:</strong> @Model.GeneratedDate.ToString("yyyy-MM-dd")</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Kraj</th>
+            @foreach (var month in Model.MonthsInRange)
+            {
+                <th>@month.ToString("MMMM yyyy")</th>
+            }
+            <th>Łączna liczba podróży</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.ReportEntries)
+        {
+            <tr>
+                <td>@entry.Id</td>
+                <td>@entry.NazwaKraju</td>
+                @foreach (var monthData in entry.MonthlyData)
+                {
+                    <td>@monthData.TripCount</td>
+                }
+                <td>@entry.TotalTrips</td>
+            </tr>
+        }
+    </tbody>
+</table>

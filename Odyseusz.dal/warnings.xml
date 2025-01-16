@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<warnings>
+	<warning>
+		<country>Polska</country>
+		<message>Unikaj dużych zgromadzeń.</message>
+	</warning>
+	<warning>
+		<country>Francja</country>
+		<message>Zwiększona liczba kieszonkowców w dużych miastach.</message>
+	</warning>
+	<warning>
+		<country>Włochy</country>
+		<message>Uwaga na strajki transportowe.</message>
+	</warning>
+</warnings>
